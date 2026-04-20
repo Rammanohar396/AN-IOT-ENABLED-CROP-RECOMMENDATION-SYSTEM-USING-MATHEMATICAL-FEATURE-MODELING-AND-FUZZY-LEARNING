@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgroCredit — Smart Crop & Carbon Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --soil: #2C1810;
+    --earth: #5C3D2E;
+    --moss: #4A6741;
+    --leaf: #7CB87A;
+    --lime: #B8D95F;
+    --sky: #A8D5E2;
+    --gold: #E8C547;
+    --cream: #F5F0E8;
+    --bark: #8B6F5E;
+    --carbon: #1A2B1A;
+    --glow: rgba(184,217,95,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--carbon);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 20%, rgba(74,103,65,0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(44,24,16,0.4) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 60% 10%, rgba(184,217,95,0.08) 0%, transparent 60%);
+    pointer-events:none; z-index:0;
+    animation: bgPulse 8s ease-in-out infinite alternate;
+  }
+  @keyframes bgPulse {
+    from { opacity:0.7; }
+    to { opacity:1; }
+  }
+
+  /* Header */
+  header {
+    position:relative; z-index:10;
+    padding: 2rem 3rem 1.5rem;
+    border-bottom: 1px solid rgba(184,217,95,0.2);
+    display:flex; align-items:center; justify-content:space-between;
+    background: rgba(26,43,26,0.6);
+    backdrop-filter: blur(12px);
+  }
+  .logo {
+    display:flex; align-items:center; gap:0.75rem;
+  }
+  .logo-icon {
+    width:42px; height:42px;
+    background: linear-gradient(135deg, var(--moss), var(--lime));
+    border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.4rem;
+    box-shadow: 0 0 20px rgba(184,217,95,0.3);
+  }
+  .logo-text h1 {
+    font-family:'Syne', sans-serif;
+    font-size:1.5rem; font-weight:800;
+    color:var(--lime); letter-spacing:-0.5px;
+  }
+  .logo-text p {
+    font-size:0.65rem; color:var(--bark); letter-spacing:2px; text-transform:uppercase;
+  }
+  .status-bar {
+    display:flex; gap:1.5rem; align-items:center;
+  }
+  .status-dot {
+    display:flex; align-items:center; gap:0.4rem;
+    font-size:0.7rem; color:var(--leaf); letter-spacing:1px;
+  }
+  .pulse {
+    width:8px; height:8px; border-radius:50%;
+    background:var(--leaf);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow:0 0 0 0 rgba(124,184,122,0.6); }
+    50% { box-shadow:0 0 0 6px rgba(124,184,122,0); }
+  }
+
+  /* Main layout */
+  main {
+    position:relative; z-index:1;
+    max-width:1200px; margin:0 auto;
+    padding: 2.5rem 2rem;
+    display:grid;
+    grid-template-columns: 380px 1fr;
+    gap: 2rem;
+  }
+
+  /* Panels */
+  .panel {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(184,217,95,0.12);
+    border-radius:16px;
+    overflow:hidden;
+    backdrop-filter:blur(8px);
+  }
+  .panel-header {
+    padding:1.2rem 1.5rem;
+    border-bottom:1px solid rgba(184,217,95,0.1);
+    display:flex; align-items:center; gap:0.6rem;
+  }
+  .panel-header h2 {
+    font-family:'Syne', sans-serif;
+    font-size:0.85rem; font-weight:700;
+    letter-spacing:2px; text-transform:uppercase;
+    color:var(--lime);
+  }
+  .panel-body { padding:1.5rem; }
+
+  /* Form inputs */
+  .input-group {
+    margin-bottom:1.2rem;
+  }
+  .input-group label {
+    display:block;
+    font-size:0.65rem; letter-spacing:2px; text-transform:uppercase;
+    color:var(--bark); margin-bottom:0.5rem;
+  }
+  .input-row {
+    display:flex; align-items:center; gap:0.75rem;
+  }
+  .input-row input[type=range] {
+    flex:1;
+    -webkit-appearance:none;
+    height:4px;
+    background: rgba(184,217,95,0.2);
+    border-radius:2px;
+    outline:none;
+  }
+  .input-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance:none;
+    width:16px; height:16px; border-radius:50%;
+    background: var(--lime);
+    cursor:pointer;
+    box-shadow: 0 0 8px rgba(184,217,95,0.5);
+  }
+  .val-badge {
+    min-width:52px; text-align:right;
+    font-size:0.8rem; font-weight:500;
+    color:var(--lime);
+  }
+  select {
+    width:100%;
+    background: rgba(255,255,255,0.06);
+    border:1px solid rgba(184,217,95,0.2);
+    border-radius:8px;
+    color:var(--cream);
+    font-family:'DM Mono', monospace;
+    font-size:0.8rem;
+    padding:0.6rem 0.8rem;
+    outline:none;
+    cursor:pointer;
+  }
+  select option { background:#1A2B1A; }
+
+  .section-divider {
+    font-size:0.6rem; letter-spacing:3px; text-transform:uppercase;
+    color:var(--moss); margin: 1.2rem 0 1rem;
+    display:flex; align-items:center; gap:0.5rem;
+  }
+  .section-divider::after {
+    content:''; flex:1; height:1px;
+    background:rgba(74,103,65,0.3);
+  }
+
+  /* Analyze button */
+  .analyze-btn {
+    width:100%; padding:1rem;
+    background: linear-gradient(135deg, var(--moss), var(--lime));
+    border:none; border-radius:10px;
+    font-family:'Syne', sans-serif;
+    font-size:0.9rem; font-weight:700;
+    letter-spacing:2px; text-transform:uppercase;
+    color:var(--carbon);
+    cursor:pointer;
+    transition: all 0.3s;
+    margin-top:1.5rem;
+    position:relative; overflow:hidden;
+  }
+  .analyze-btn::after {
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.15), transparent);
+    transform:translateX(-100%);
+    transition:transform 0.5s;
+  }
+  .analyze-btn:hover { box-shadow:0 0 30px rgba(184,217,95,0.4); transform:translateY(-1px); }
+  .analyze-btn:hover::after { transform:translateX(100%); }
+  .analyze-btn:active { transform:translateY(0); }
+
+  /* Right panel — results */
+  .right-col { display:flex; flex-direction:column; gap:1.5rem; }
+
+  /* Crop result card */
+  .crop-result {
+    padding:2rem;
+    background: linear-gradient(135deg, rgba(74,103,65,0.2), rgba(26,43,26,0.4));
+    border:1px solid rgba(184,217,95,0.25);
+    border-radius:16px;
+    display:none;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .crop-result.visible { display:block; }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  .crop-top {
+    display:flex; align-items:flex-start; justify-content:space-between;
+    margin-bottom:1.5rem;
+  }
+  .crop-name {
+    font-family:'Syne', sans-serif;
+    font-size:2.2rem; font-weight:800;
+    color:var(--lime); line-height:1;
+  }
+  .crop-sub {
+    font-size:0.7rem; letter-spacing:2px; color:var(--bark); margin-top:0.3rem;
+    text-transform:uppercase;
+  }
+  .confidence-ring {
+    position:relative; width:72px; height:72px;
+  }
+  .confidence-ring svg { transform:rotate(-90deg); }
+  .confidence-ring .ring-val {
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Syne', sans-serif; font-size:1rem; font-weight:700;
+    color:var(--lime);
+  }
+
+  .crop-tags {
+    display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.5rem;
+  }
+  .tag {
+    padding:0.3rem 0.8rem;
+    border-radius:20px; font-size:0.65rem; letter-spacing:1px; text-transform:uppercase;
+  }
+  .tag-green { background:rgba(124,184,122,0.15); color:var(--leaf); border:1px solid rgba(124,184,122,0.3); }
+  .tag-gold { background:rgba(232,197,71,0.15); color:var(--gold); border:1px solid rgba(232,197,71,0.3); }
+  .tag-blue { background:rgba(168,213,226,0.12); color:var(--sky); border:1px solid rgba(168,213,226,0.25); }
+
+  /* Metrics grid */
+  .metrics-grid {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;
+  }
+  .metric-card {
+    background: rgba(255,255,255,0.04);
+    border:1px solid rgba(184,217,95,0.1);
+    border-radius:12px; padding:1.2rem 1rem;
+    text-align:center;
+  }
+  .metric-icon { font-size:1.5rem; margin-bottom:0.4rem; }
+  .metric-val {
+    font-family:'Syne', sans-serif;
+    font-size:1.4rem; font-weight:700;
+    color:var(--lime);
+  }
+  .metric-val.negative { color:#E87A5D; }
+  .metric-val.gold { color:var(--gold); }
+  .metric-label { font-size:0.6rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--bark); margin-top:0.2rem; }
+
+  /* Carbon breakdown */
+  .carbon-panel {
+    padding:1.5rem;
+    background: rgba(255,255,255,0.03);
+    border:1px solid rgba(184,217,95,0.1);
+    border-radius:14px;
+  }
+  .carbon-title {
+    font-family:'Syne', sans-serif;
+    font-size:0.75rem; font-weight:700;
+    letter-spacing:2px; text-transform:uppercase;
+    color:var(--leaf); margin-bottom:1.2rem;
+    display:flex; align-items:center; gap:0.5rem;
+  }
+  .carbon-bar-row {
+    display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem;
+  }
+  .carbon-bar-label { font-size:0.68rem; color:var(--bark); width:110px; flex-shrink:0; }
+  .carbon-bar-track {
+    flex:1; height:8px; background:rgba(255,255,255,0.08);
+    border-radius:4px; overflow:hidden;
+  }
+  .carbon-bar-fill {
+    height:100%; border-radius:4px;
+    transition: width 1s cubic-bezier(.4,0,.2,1);
+    width:0%;
+  }
+  .bar-emission { background:linear-gradient(90deg,#E87A5D,#E8A55D); }
+  .bar-sequester { background:linear-gradient(90deg,var(--moss),var(--lime)); }
+  .carbon-bar-num { font-size:0.7rem; color:var(--cream); width:65px; text-align:right; }
+
+  /* Credit box */
+  .credit-box {
+    margin-top:1.2rem;
+    padding:1.2rem 1.5rem;
+    background: linear-gradient(135deg, rgba(232,197,71,0.1), rgba(184,217,95,0.08));
+    border:1px solid rgba(232,197,71,0.3);
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .credit-left h3 {
+    font-family:'Syne', sans-serif;
+    font-size:1.1rem; font-weight:700; color:var(--gold);
+  }
+  .credit-left p { font-size:0.65rem; color:var(--bark); letter-spacing:1px; text-transform:uppercase; margin-top:0.2rem; }
+  .credit-right {
+    text-align:right;
+  }
+  .credit-price {
+    font-family:'Syne', sans-serif;
+    font-size:1.8rem; font-weight:800; color:var(--gold);
+  }
+  .credit-price-sub { font-size:0.6rem; color:var(--bark); }
+
+  /* Fuzzy logic display */
+  .fuzzy-section {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0.8rem; margin-top:1rem;
+  }
+  .fuzzy-card {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(184,217,95,0.1);
+    border-radius:10px; padding:0.8rem;
+    text-align:center;
+  }
+  .fuzzy-label { font-size:0.6rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--bark); margin-bottom:0.3rem; }
+  .fuzzy-val { font-family:'Syne', sans-serif; font-size:0.85rem; font-weight:700; }
+  .fuzzy-low { color:#A8D5E2; }
+  .fuzzy-med { color:var(--gold); }
+  .fuzzy-high { color:#E87A5D; }
+  .fuzzy-good { color:var(--lime); }
+
+  /* Placeholder state */
+  .placeholder-state {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:3rem; text-align:center;
+    opacity:0.4;
+  }
+  .placeholder-state .big-icon { font-size:4rem; margin-bottom:1rem; }
+  .placeholder-state p { font-family:'Lora', serif; font-style:italic; font-size:0.9rem; color:var(--bark); line-height:1.6; }
+
+  /* Loading */
+  .loading-overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(26,43,26,0.85); z-index:100;
+    align-items:center; justify-content:center;
+    flex-direction:column; gap:1rem;
+    backdrop-filter:blur(8px);
+  }
+  .loading-overlay.active { display:flex; }
+  .spinner {
+    width:50px; height:50px;
+    border:3px solid rgba(184,217,95,0.2);
+    border-top-color:var(--lime);
+    border-radius:50%;
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .loading-text { font-family:'Syne', sans-serif; font-size:0.8rem; letter-spacing:3px; text-transform:uppercase; color:var(--lime); }
+
+  /* Report button */
+  .report-btn {
+    padding:0.7rem 1.4rem;
+    background:transparent;
+    border:1px solid rgba(232,197,71,0.4);
+    border-radius:8px;
+    font-family:'DM Mono', monospace;
+    font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--gold); cursor:pointer;
+    transition:all 0.3s;
+    display:none;
+  }
+  .report-btn.visible { display:inline-flex; align-items:center; gap:0.5rem; }
+  .report-btn:hover { background:rgba(232,197,71,0.1); }
+
+  /* Recommendations list */
+  .rec-list { margin-top:1rem; }
+  .rec-item {
+    display:flex; align-items:flex-start; gap:0.6rem;
+    padding:0.6rem 0; border-bottom:1px solid rgba(255,255,255,0.05);
+    font-size:0.72rem; color:var(--cream); line-height:1.5;
+  }
+  .rec-item:last-child { border-bottom:none; }
+  .rec-dot { width:6px; height:6px; border-radius:50%; background:var(--lime); margin-top:0.35rem; flex-shrink:0; }
+
+  @media (max-width:900px) {
+    main { grid-template-columns:1fr; }
+    .metrics-grid { grid-template-columns:repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🌿</div>
+    <div class="logo-text">
+      <h1>AgroCredit</h1>
+      <p>IoT Crop & Carbon Intelligence System</p>
+    </div>
+  </div>
+  <div class="status-bar">
+    <div class="status-dot"><div class="pulse"></div> IoT Sensors Live</div>
+    <button class="report-btn" id="reportBtn" onclick="downloadReport()">⬇ Download Report</button>
+  </div>
+</header>
+
+<main>
+  <!-- INPUT PANEL -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>📡</span>
+      <h2>Sensor Inputs</h2>
+    </div>
+    <div class="panel-body">
+
+      <div class="input-group">
+        <label>Soil Moisture (%)</label>
+        <div class="input-row">
+          <input type="range" min="0" max="100" value="55" id="moisture" oninput="updateVal('moisture','moistureVal','%')">
+          <span class="val-badge" id="moistureVal">55%</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Soil pH</label>
+        <div class="input-row">
+          <input type="range" min="4" max="9" step="0.1" value="6.5" id="ph" oninput="updateVal('ph','phVal','')">
+          <span class="val-badge" id="phVal">6.5</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Temperature (°C)</label>
+        <div class="input-row">
+          <input type="range" min="10" max="45" value="28" id="temp" oninput="updateVal('temp','tempVal','°C')">
+          <span class="val-badge" id="tempVal">28°C</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Humidity (%)</label>
+        <div class="input-row">
+          <input type="range" min="20" max="100" value="65" id="humidity" oninput="updateVal('humidity','humidityVal','%')">
+          <span class="val-badge" id="humidityVal">65%</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Nitrogen (N) kg/ha</label>
+        <div class="input-row">
+          <input type="range" min="0" max="140" value="60" id="nitrogen" oninput="updateVal('nitrogen','nitrogenVal',' kg/ha')">
+          <span class="val-badge" id="nitrogenVal">60 kg/ha</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Phosphorus (P) kg/ha</label>
+        <div class="input-row">
+          <input type="range" min="0" max="100" value="40" id="phosphorus" oninput="updateVal('phosphorus','phosphorusVal',' kg/ha')">
+          <span class="val-badge" id="phosphorusVal">40 kg/ha</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Potassium (K) kg/ha</label>
+        <div class="input-row">
+          <input type="range" min="0" max="200" value="80" id="potassium" oninput="updateVal('potassium','potassiumVal',' kg/ha')">
+          <span class="val-badge" id="potassiumVal">80 kg/ha</span>
+        </div>
+      </div>
+
+      <div class="section-divider">Farming Practices</div>
+
+      <div class="input-group">
+        <label>Fertilizer Type</label>
+        <select id="fertType">
+          <option value="organic">Organic / Compost</option>
+          <option value="urea" selected>Urea (Synthetic)</option>
+          <option value="npk">NPK Compound</option>
+          <option value="biofert">Biofertilizer</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Irrigation Method</label>
+        <select id="irrigationType">
+          <option value="drip">Drip Irrigation</option>
+          <option value="sprinkler" selected>Sprinkler</option>
+          <option value="flood">Flood Irrigation</option>
+          <option value="rainfed">Rain-fed</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Land Area (Hectares)</label>
+        <div class="input-row">
+          <input type="range" min="0.5" max="20" step="0.5" value="2" id="area" oninput="updateVal('area','areaVal',' ha')">
+          <span class="val-badge" id="areaVal">2 ha</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Season</label>
+        <select id="season">
+          <option value="kharif">Kharif (Jun–Oct)</option>
+          <option value="rabi" selected>Rabi (Nov–Mar)</option>
+          <option value="zaid">Zaid (Mar–Jun)</option>
+          <option value="perennial">Perennial</option>
+        </select>
+      </div>
+
+      <button class="analyze-btn" onclick="analyze()">⚡ Analyze &amp; Recommend</button>
+    </div>
+  </div>
+
+  <!-- RESULTS PANEL -->
+  <div class="right-col" id="rightCol">
+    <div class="placeholder-state" id="placeholder">
+      <div class="big-icon">🌾</div>
+      <p>Enter your field parameters and hit Analyze to receive AI-powered crop recommendations with carbon credit projections.</p>
+    </div>
+  </div>
+</main>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loader">
+  <div class="spinner"></div>
+  <div class="loading-text">Analyzing Field Data…</div>
+</div>
+
+<script>
+// ── Utilities ──────────────────────────────────────────────────────────────
+function updateVal(id, labelId, suffix) {
+  document.getElementById(labelId).textContent = document.getElementById(id).value + suffix;
+}
+
+// ── Fuzzy Logic Engine ─────────────────────────────────────────────────────
+function fuzzy(val, low, mid, high) {
+  if (val <= low[1]) return 'Low';
+  if (val >= high[0]) return 'High';
+  if (val >= mid[0] && val <= mid[1]) return 'Moderate';
+  if (val > low[1] && val < mid[0]) return 'Low-Moderate';
+  return 'Moderate-High';
+}
+
+function fuzzyMoisture(v)  { return fuzzy(v,[0,35],[35,65],[65,100]); }
+function fuzzyPH(v)        { return v < 5.5?'Acidic': v > 7.5?'Alkaline':'Neutral'; }
+function fuzzyTemp(v)      { return v < 18?'Cool': v > 34?'Hot':'Warm'; }
+function fuzzyHumidity(v)  { return fuzzy(v,[0,40],[40,70],[70,100]); }
+function fuzzyNitrogen(v)  { return fuzzy(v,[0,40],[40,80],[80,140]); }
+
+// ── Crop Database ──────────────────────────────────────────────────────────
+const crops = [
+  { name:'Rice', emoji:'🌾', season:['kharif','perennial'],
+    conditions:{ moisture:[60,100], ph:[5.5,7.0], temp:[22,35], humidity:[60,100], N:[80,140], P:[30,70], K:[40,100] },
+    carbon:{ seq:4.2, baseEmit:2.8 }, creditPerTon:15, tags:['Staple Crop','High Water','Carbon Moderate'],
+    market:'Verified Carbon Standard (VCS)', variety:'IR-64, Swarna' },
+  { name:'Wheat', emoji:'🌾', season:['rabi'],
+    conditions:{ moisture:[40,70], ph:[6.0,7.5], temp:[12,25], humidity:[40,70], N:[80,120], P:[40,80], K:[40,80] },
+    carbon:{ seq:3.1, baseEmit:1.9 }, creditPerTon:12, tags:['Staple Crop','Moderate Water','Low Emission'],
+    market:'Gold Standard', variety:'HD-2967, WH-542' },
+  { name:'Maize', emoji:'🌽', season:['kharif','zaid'],
+    conditions:{ moisture:[45,75], ph:[5.8,7.0], temp:[20,33], humidity:[45,75], N:[100,140], P:[50,90], K:[50,100] },
+    carbon:{ seq:5.8, baseEmit:2.1 }, creditPerTon:18, tags:['Biofuel Crop','High Sequester','Global Market'],
+    market:'American Carbon Registry', variety:'HQPM-1, NK-6240' },
+  { name:'Soybean', emoji:'🫘', season:['kharif'],
+    conditions:{ moisture:[45,70], ph:[6.0,7.0], temp:[20,30], humidity:[50,80], N:[20,60], P:[50,90], K:[60,120] },
+    carbon:{ seq:6.5, baseEmit:1.2 }, creditPerTon:22, tags:['N-Fixing','High Credit','Soil Builder'],
+    market:'Verra — VCS', variety:'JS-335, NRC-7' },
+  { name:'Chickpea', emoji:'🫘', season:['rabi'],
+    conditions:{ moisture:[30,60], ph:[6.0,8.0], temp:[15,25], humidity:[30,60], N:[10,40], P:[40,80], K:[30,80] },
+    carbon:{ seq:3.8, baseEmit:0.8 }, creditPerTon:20, tags:['N-Fixing','Drought Hardy','Low Input'],
+    market:'Gold Standard', variety:'JG-11, KAK-2' },
+  { name:'Sugarcane', emoji:'🎋', season:['perennial','kharif'],
+    conditions:{ moisture:[65,100], ph:[6.0,7.5], temp:[25,38], humidity:[60,100], N:[100,140], P:[40,70], K:[80,140] },
+    carbon:{ seq:7.2, baseEmit:3.5 }, creditPerTon:14, tags:['Bioenergy','High Biomass','Long Cycle'],
+    market:'Clean Development Mechanism', variety:'Co-0238, CoJ-64' },
+  { name:'Cotton', emoji:'🪴', season:['kharif'],
+    conditions:{ moisture:[40,70], ph:[6.0,7.5], temp:[25,38], humidity:[40,70], N:[80,140], P:[40,80], K:[60,120] },
+    carbon:{ seq:2.9, baseEmit:2.2 }, creditPerTon:11, tags:['Cash Crop','Export Value','Moderate Credit'],
+    market:'Verra — VCS', variety:'BTH-10, MRC-7017' },
+  { name:'Groundnut', emoji:'🥜', season:['kharif','zaid'],
+    conditions:{ moisture:[40,65], ph:[5.5,7.0], temp:[25,35], humidity:[40,70], N:[20,60], P:[40,80], K:[60,120] },
+    carbon:{ seq:3.4, baseEmit:1.0 }, creditPerTon:19, tags:['N-Fixing','Oil Crop','Soil Health'],
+    market:'Gold Standard', variety:'ICGV-86031, TAG-24' },
+  { name:'Mustard', emoji:'🌼', season:['rabi'],
+    conditions:{ moisture:[30,55], ph:[6.0,7.5], temp:[10,22], humidity:[30,60], N:[60,100], P:[30,60], K:[30,70] },
+    carbon:{ seq:2.6, baseEmit:1.4 }, creditPerTon:13, tags:['Oil Crop','Cool Season','Low Water'],
+    market:'Gold Standard', variety:'Pusa Bold, RH-749' },
+  { name:'Banana', emoji:'🍌', season:['perennial'],
+    conditions:{ moisture:[70,100], ph:[5.5,7.0], temp:[26,35], humidity:[65,100], N:[100,140], P:[40,80], K:[100,200] },
+    carbon:{ seq:8.1, baseEmit:1.8 }, creditPerTon:25, tags:['High Biomass','Tropical','Top Carbon'],
+    market:'Verra — VCS', variety:'Robusta, Grand Naine' },
+  { name:'Tomato', emoji:'🍅', season:['rabi','zaid'],
+    conditions:{ moisture:[50,75], ph:[6.0,7.0], temp:[18,30], humidity:[50,80], N:[80,120], P:[50,90], K:[80,140] },
+    carbon:{ seq:2.2, baseEmit:1.6 }, creditPerTon:10, tags:['Vegetable','Short Cycle','Market Value'],
+    market:'Local Carbon Market', variety:'Arka Vikas, Pusa Ruby' },
+  { name:'Jowar (Sorghum)', emoji:'🌾', season:['kharif'],
+    conditions:{ moisture:[30,60], ph:[6.0,8.0], temp:[25,38], humidity:[30,65], N:[60,100], P:[30,60], K:[40,80] },
+    carbon:{ seq:4.9, baseEmit:1.1 }, creditPerTon:17, tags:['Drought Hardy','Bioenergy','High Sequester'],
+    market:'American Carbon Registry', variety:'CSH-16, SPV-462' },
+];
+
+// ── Scoring Engine ─────────────────────────────────────────────────────────
+function scoreCrop(crop, inputs) {
+  const c = crop.conditions;
+  let score = 0; let total = 0;
+
+  const check = (val, [lo,hi]) => {
+    total++;
+    if (val >= lo && val <= hi) score += 1;
+    else score += Math.max(0, 1 - Math.abs(val < lo ? lo - val : val - hi) / (hi - lo));
+  };
+
+  check(inputs.moisture, c.moisture);
+  check(parseFloat(inputs.ph), c.ph);
+  check(inputs.temp, c.temp);
+  check(inputs.humidity, c.humidity);
+  check(inputs.N, c.N);
+  check(inputs.P, c.P);
+  check(inputs.K, c.K);
+
+  // Season bonus
+  if (crop.season.includes(inputs.season)) score += 1.5;
+  total += 1.5;
+
+  return (score / total) * 100;
+}
+
+// ── Carbon Calculation ─────────────────────────────────────────────────────
+const fertEmissionFactor = { organic:0.3, urea:2.8, npk:2.0, biofert:0.15 };
+const irrigEmissionFactor = { drip:0.12, sprinkler:0.35, flood:0.8, rainfed:0.05 };
+
+function calcCarbon(crop, inputs) {
+  const area = inputs.area;
+  const fertEmit = fertEmissionFactor[inputs.fertType] * area;
+  const irrigEmit = irrigEmissionFactor[inputs.irrigationType] * area;
+  const machineEmit = 0.25 * area; // avg machinery
+  const totalEmit = fertEmit + irrigEmit + machineEmit;
+
+  const seqPerHa = crop.carbon.seq;
+  const totalSeq = seqPerHa * area;
+
+  const netCarbon = totalSeq - totalEmit; // tCO2e
+  return { fertEmit, irrigEmit, machineEmit, totalEmit, totalSeq, netCarbon };
+}
+
+function creditValue(netCarbon, pricePerTon) {
+  if (netCarbon <= 0) return 0;
+  return netCarbon * pricePerTon;
+}
+
+// ── Main Analyze Function ──────────────────────────────────────────────────
+let lastResult = null;
+
+function analyze() {
+  const inputs = {
+    moisture: +document.getElementById('moisture').value,
+    ph: +document.getElementById('ph').value,
+    temp: +document.getElementById('temp').value,
+    humidity: +document.getElementById('humidity').value,
+    N: +document.getElementById('nitrogen').value,
+    P: +document.getElementById('phosphorus').value,
+    K: +document.getElementById('potassium').value,
+    fertType: document.getElementById('fertType').value,
+    irrigationType: document.getElementById('irrigationType').value,
+    area: +document.getElementById('area').value,
+    season: document.getElementById('season').value,
+  };
+
+  // Show loader
+  document.getElementById('loader').classList.add('active');
+
+  setTimeout(() => {
+    document.getElementById('loader').classList.remove('active');
+
+    // Score all crops
+    const scored = crops.map(c => ({ ...c, score: scoreCrop(c, inputs) }))
+      .sort((a,b) => b.score - a.score);
+
+    const top = scored[0];
+    const confidence = Math.min(99, Math.round(top.score));
+    const carbon = calcCarbon(top, inputs);
+    const creditVal = creditValue(carbon.netCarbon, top.creditPerTon);
+
+    lastResult = { top, confidence, carbon, creditVal, inputs, scored };
+
+    renderResults(top, confidence, carbon, creditVal, inputs, scored);
+    document.getElementById('reportBtn').classList.add('visible');
+  }, 1400);
+}
+
+function renderResults(top, confidence, carbon, creditVal, inputs, scored) {
+  const rc = document.getElementById('rightCol');
+  document.getElementById('placeholder')?.remove();
+
+  // Fuzzy classifications
+  const fm = fuzzyMoisture(inputs.moisture);
+  const fp = fuzzyPH(inputs.ph);
+  const ft = fuzzyTemp(inputs.temp);
+  const fh = fuzzyHumidity(inputs.humidity);
+  const fn = fuzzyNitrogen(inputs.N);
+
+  function fuzzyClass(v) {
+    if (v.includes('High') || v === 'Hot' || v === 'Alkaline' || v === 'Acidic') return 'fuzzy-high';
+    if (v.includes('Low') || v === 'Cool') return 'fuzzy-low';
+    return 'fuzzy-med';
+  }
+
+  const circumference = 2 * Math.PI * 28;
+  const dashOffset = circumference * (1 - confidence / 100);
+
+  // Alternative crops
+  const alts = scored.slice(1,4).map(c =>
+    `<div class="rec-item"><div class="rec-dot"></div>${c.emoji} <strong>${c.name}</strong> — Match: ${Math.round(c.score)}% | Credits: $${(creditValue(calcCarbon(c,inputs).netCarbon, c.creditPerTon)).toFixed(0)}/season</div>`
+  ).join('');
+
+  rc.innerHTML = `
+    <!-- Crop Result -->
+    <div class="crop-result visible">
+      <div class="crop-top">
+        <div>
+          <div class="crop-name">${top.emoji} ${top.name}</div>
+          <div class="crop-sub">Recommended Crop · ${top.variety}</div>
+        </div>
+        <div class="confidence-ring">
+          <svg width="72" height="72" viewBox="0 0 72 72">
+            <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(184,217,95,0.15)" stroke-width="5"/>
+            <circle cx="36" cy="36" r="28" fill="none" stroke="var(--lime)" stroke-width="5"
+              stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}"
+              stroke-linecap="round"/>
+          </svg>
+          <div class="ring-val">${confidence}%</div>
+        </div>
+      </div>
+
+      <div class="crop-tags">
+        ${top.tags.map(t => `<span class="tag tag-green">${t}</span>`).join('')}
+        <span class="tag tag-gold">📈 ${top.market}</span>
+        <span class="tag tag-blue">📅 ${inputs.season.charAt(0).toUpperCase()+inputs.season.slice(1)}</span>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon">🌿</div>
+          <div class="metric-val">${carbon.totalSeq.toFixed(1)}</div>
+          <div class="metric-label">tCO₂e Sequestered</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">🏭</div>
+          <div class="metric-val negative">${carbon.totalEmit.toFixed(1)}</div>
+          <div class="metric-label">tCO₂e Emitted</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">⚖️</div>
+          <div class="metric-val ${carbon.netCarbon > 0 ? '' : 'negative'}">${carbon.netCarbon > 0 ? '+' : ''}${carbon.netCarbon.toFixed(1)}</div>
+          <div class="metric-label">Net Carbon (tCO₂e)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carbon Breakdown -->
+    <div class="carbon-panel">
+      <div class="carbon-title">🌍 Carbon Footprint Breakdown</div>
+
+      <div class="carbon-bar-row">
+        <span class="carbon-bar-label">Sequestration</span>
+        <div class="carbon-bar-track"><div class="carbon-bar-fill bar-sequester" id="barSeq" style="width:0%"></div></div>
+        <span class="carbon-bar-num">+${carbon.totalSeq.toFixed(2)} t</span>
+      </div>
+      <div class="carbon-bar-row">
+        <span class="carbon-bar-label">Fertilizer</span>
+        <div class="carbon-bar-track"><div class="carbon-bar-fill bar-emission" id="barFert" style="width:0%"></div></div>
+        <span class="carbon-bar-num">-${carbon.fertEmit.toFixed(2)} t</span>
+      </div>
+      <div class="carbon-bar-row">
+        <span class="carbon-bar-label">Irrigation</span>
+        <div class="carbon-bar-track"><div class="carbon-bar-fill bar-emission" id="barIrrig" style="width:0%"></div></div>
+        <span class="carbon-bar-num">-${carbon.irrigEmit.toFixed(2)} t</span>
+      </div>
+      <div class="carbon-bar-row">
+        <span class="carbon-bar-label">Machinery</span>
+        <div class="carbon-bar-track"><div class="carbon-bar-fill bar-emission" id="barMach" style="width:0%"></div></div>
+        <span class="carbon-bar-num">-${carbon.machineEmit.toFixed(2)} t</span>
+      </div>
+
+      <!-- Carbon Credit Box -->
+      <div class="credit-box">
+        <div class="credit-left">
+          <h3>${carbon.netCarbon > 0 ? '✅ Carbon Credits Earned' : '⚠ Carbon Deficit'}</h3>
+          <p>${carbon.netCarbon > 0 ? `Eligible for ${top.market}` : 'Optimize practices to earn credits'}</p>
+        </div>
+        <div class="credit-right">
+          <div class="credit-price">$${creditVal.toFixed(0)}</div>
+          <div class="credit-price-sub">USD / Season · $${top.creditPerTon}/tCO₂e</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fuzzy Logic -->
+    <div class="carbon-panel">
+      <div class="carbon-title">🔬 Fuzzy Logic Classification</div>
+      <div class="fuzzy-section">
+        <div class="fuzzy-card"><div class="fuzzy-label">Moisture</div><div class="fuzzy-val ${fuzzyClass(fm)}">${fm}</div></div>
+        <div class="fuzzy-card"><div class="fuzzy-label">Soil pH</div><div class="fuzzy-val ${fuzzyClass(fp)}">${fp}</div></div>
+        <div class="fuzzy-card"><div class="fuzzy-label">Temperature</div><div class="fuzzy-val ${fuzzyClass(ft)}">${ft}</div></div>
+        <div class="fuzzy-card"><div class="fuzzy-label">Humidity</div><div class="fuzzy-val ${fuzzyClass(fh)}">${fh}</div></div>
+        <div class="fuzzy-card"><div class="fuzzy-label">Nitrogen</div><div class="fuzzy-val ${fuzzyClass(fn)}">${fn}</div></div>
+        <div class="fuzzy-card"><div class="fuzzy-label">Soil Area</div><div class="fuzzy-val fuzzy-good">${inputs.area} ha</div></div>
+      </div>
+    </div>
+
+    <!-- Alternative Crops -->
+    <div class="carbon-panel">
+      <div class="carbon-title">🔄 Alternative Crop Options</div>
+      <div class="rec-list">${alts}</div>
+    </div>
+  `;
+
+  // Animate bars
+  const max = carbon.totalSeq;
+  setTimeout(() => {
+    document.getElementById('barSeq').style.width = '100%';
+    document.getElementById('barFert').style.width = (carbon.fertEmit / max * 100) + '%';
+    document.getElementById('barIrrig').style.width = (carbon.irrigEmit / max * 100) + '%';
+    document.getElementById('barMach').style.width = (carbon.machineEmit / max * 100) + '%';
+  }, 100);
+}
+
+// ── Report Download ────────────────────────────────────────────────────────
+function downloadReport() {
+  if (!lastResult) return;
+  const { top, confidence, carbon, creditVal, inputs } = lastResult;
+  const date = new Date().toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' });
+
+  const report = `AGROCREDIT — IoT SMART CROP & CARBON INTELLIGENCE REPORT
+${'='.repeat(60)}
+Generated: ${date}
+
+FIELD PARAMETERS
+${'─'.repeat(40)}
+Soil Moisture     : ${inputs.moisture}%
+Soil pH           : ${inputs.ph}
+Temperature       : ${inputs.temp}°C
+Humidity          : ${inputs.humidity}%
+Nitrogen (N)      : ${inputs.N} kg/ha
+Phosphorus (P)    : ${inputs.P} kg/ha
+Potassium (K)     : ${inputs.K} kg/ha
+Fertilizer Type   : ${inputs.fertType}
+Irrigation Method : ${inputs.irrigationType}
+Land Area         : ${inputs.area} ha
+Season            : ${inputs.season}
+
+CROP RECOMMENDATION
+${'─'.repeat(40)}
+Recommended Crop  : ${top.name}
+Variety           : ${top.variety}
+Confidence Score  : ${confidence}%
+Season Suitability: ${top.season.join(', ')}
+Tags              : ${top.tags.join(', ')}
+
+CARBON ANALYSIS (per season)
+${'─'.repeat(40)}
+Carbon Sequestered: +${carbon.totalSeq.toFixed(2)} tCO2e
+Fertilizer Emission: -${carbon.fertEmit.toFixed(2)} tCO2e
+Irrigation Emission: -${carbon.irrigEmit.toFixed(2)} tCO2e
+Machinery Emission : -${carbon.machineEmit.toFixed(2)} tCO2e
+Total Emissions   : -${carbon.totalEmit.toFixed(2)} tCO2e
+NET CARBON BALANCE: ${carbon.netCarbon > 0 ? '+' : ''}${carbon.netCarbon.toFixed(2)} tCO2e
+
+CARBON CREDIT VALUE
+${'─'.repeat(40)}
+Market Platform   : ${top.market}
+Credit Rate       : $${top.creditPerTon} per tCO2e
+ESTIMATED EARNINGS: $${creditVal.toFixed(2)} USD/season
+
+FUZZY LOGIC CLASSIFICATION
+${'─'.repeat(40)}
+Moisture Level    : ${fuzzyMoisture(inputs.moisture)}
+Soil pH State     : ${fuzzyPH(inputs.ph)}
+Temperature Zone  : ${fuzzyTemp(inputs.temp)}
+Humidity Level    : ${fuzzyHumidity(inputs.humidity)}
+Nitrogen Status   : ${fuzzyNitrogen(inputs.N)}
+
+${'='.repeat(60)}
+This report was generated by AgroCredit — IoT Crop & Carbon
+Intelligence System. Data is based on environmental models
+and standard carbon accounting methodologies.
+${'='.repeat(60)}`;
+
+  const blob = new Blob([report], { type:'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `AgroCredit_Report_${top.name}_${Date.now()}.txt`;
+  a.click(); URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
