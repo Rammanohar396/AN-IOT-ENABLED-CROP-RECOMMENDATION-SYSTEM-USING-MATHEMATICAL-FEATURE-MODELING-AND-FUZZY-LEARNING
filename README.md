@@ -1,7 +1,7 @@
 # AN-IOT-ENABLED-CROP-RECOMMENDATION-SYSTEM-USING-MATHEMATICAL-FEATURE-MODELING-AND-FUZZY-LEARNING
  
 
-**An intelligent crop recommendation platform combining IoT sensor data, Ensemble ML, Fuzzy Logic, and Carbon Footprint analysis for precision agriculture in Tamil Nadu.**
+**An intelligent crop recommendation platform combining IoT sensor data, Ensemble ML, Fuzzy Logic, and Carbon Footprint analysis for precision agriculture.**
 
 </div>
 
