@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgroCredit — Smart Crop & Carbon Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🌿</div>
+    <div class="logo-text">
+      <h1>AgroCredit</h1>
+      <p>IoT Crop & Carbon Intelligence System</p>
+    </div>
+  </div>
+  <div class="status-bar">
+    <div class="status-dot"><div class="pulse"></div> IoT Sensors Live</div>
+    <button class="report-btn" id="reportBtn" onclick="downloadReport()">⬇ Download Report</button>
+  </div>
+</header>
+
+<main>
+  <!-- INPUT PANEL -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>📡</span>
+      <h2>Sensor Inputs</h2>
+    </div>
+    <div class="panel-body">
+
+      <div class="input-group">
+        <label>Soil Moisture (%)</label>
+        <div class="input-row">
+          <input type="range" min="0" max="100" value="55" id="moisture" oninput="updateVal('moisture','moistureVal','%')">
+          <span class="val-badge" id="moistureVal">55%</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Soil pH</label>
+        <div class="input-row">
+          <input type="range" min="4" max="9" step="0.1" value="6.5" id="ph" oninput="updateVal('ph','phVal','')">
+          <span class="val-badge" id="phVal">6.5</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Temperature (°C)</label>
+        <div class="input-row">
+          <input type="range" min="10" max="45" value="28" id="temp" oninput="updateVal('temp','tempVal','°C')">
+          <span class="val-badge" id="tempVal">28°C</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Humidity (%)</label>
+        <div class="input-row">
+          <input type="range" min="20" max="100" value="65" id="humidity" oninput="updateVal('humidity','humidityVal','%')">
+          <span class="val-badge" id="humidityVal">65%</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Nitrogen (N) kg/ha</label>
+        <div class="input-row">
+          <input type="range" min="0" max="140" value="60" id="nitrogen" oninput="updateVal('nitrogen','nitrogenVal',' kg/ha')">
+          <span class="val-badge" id="nitrogenVal">60 kg/ha</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Phosphorus (P) kg/ha</label>
+        <div class="input-row">
+          <input type="range" min="0" max="100" value="40" id="phosphorus" oninput="updateVal('phosphorus','phosphorusVal',' kg/ha')">
+          <span class="val-badge" id="phosphorusVal">40 kg/ha</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Potassium (K) kg/ha</label>
+        <div class="input-row">
+          <input type="range" min="0" max="200" value="80" id="potassium" oninput="updateVal('potassium','potassiumVal',' kg/ha')">
+          <span class="val-badge" id="potassiumVal">80 kg/ha</span>
+        </div>
+      </div>
+
+      <div class="section-divider">Farming Practices</div>
+
+      <div class="input-group">
+        <label>Fertilizer Type</label>
+        <select id="fertType">
+          <option value="organic">Organic / Compost</option>
+          <option value="urea" selected>Urea (Synthetic)</option>
+          <option value="npk">NPK Compound</option>
+          <option value="biofert">Biofertilizer</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Irrigation Method</label>
+        <select id="irrigationType">
+          <option value="drip">Drip Irrigation</option>
+          <option value="sprinkler" selected>Sprinkler</option>
+          <option value="flood">Flood Irrigation</option>
+          <option value="rainfed">Rain-fed</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Land Area (Hectares)</label>
+        <div class="input-row">
+          <input type="range" min="0.5" max="20" step="0.5" value="2" id="area" oninput="updateVal('area','areaVal',' ha')">
+          <span class="val-badge" id="areaVal">2 ha</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Season</label>
+        <select id="season">
+          <option value="kharif">Kharif (Jun–Oct)</option>
+          <option value="rabi" selected>Rabi (Nov–Mar)</option>
+          <option value="zaid">Zaid (Mar–Jun)</option>
+          <option value="perennial">Perennial</option>
+        </select>
+      </div>
+
+      <button class="analyze-btn" onclick="analyze()">⚡ Analyze &amp; Recommend</button>
+    </div>
+  </div>
+
+  <!-- RESULTS PANEL -->
+  <div class="right-col" id="rightCol">
+    <div class="placeholder-state" id="placeholder">
+      <div class="big-icon">🌾</div>
+      <p>Enter your field parameters and hit Analyze to receive AI-powered crop recommendations with carbon credit projections.</p>
+    </div>
+  </div>
+</main>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loader">
+  <div class="spinner"></div>
+  <div class="loading-text">Analyzing Field Data…</div>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
