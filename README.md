@@ -84,5 +84,3 @@ Department of Computer Science and Engineering · Tamil Nadu, India · 2025
 MIT License — see [LICENSE](LICENSE) for details.
 
 ---
-
-<div align="center">Made with ❤️ for sustainable agriculture · Tamil Nadu, India · 2025</div>
